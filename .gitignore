@@ -2,3 +2,11 @@ node_modules/
 dist/
 .env
 *.local
+
+# SQLite database files (data lokal, jangan di-commit)
+*.db
+*.db-shm
+*.db-wal
+
+# Screenshots test
+screenshots/
