@@ -2,7 +2,7 @@ const { DatabaseSync } = require('node:sqlite')
 const path = require('path')
 
 function createDb(dbPath) {
-  const db = new DatabaseSync(dbPath || path.join(__dirname, 'invoice.db'))
+  const db = new DatabaseSync(dbPath || process.env.DB_PATH || path.join(__dirname, 'invoice.db'))
   db.exec('PRAGMA journal_mode = WAL')
   db.exec('PRAGMA foreign_keys = ON')
 
