@@ -76,6 +76,21 @@ function createRouter(db) {
     res.status(204).end()
   })
 
+  router.get('/:id/pdf', async (req, res) => {
+    const invoice = db.prepare('SELECT * FROM invoices WHERE id = ?').get(req.params.id)
+    if (!invoice) return res.status(404).json({ error: 'Invoice not found' })
+    const items = db.prepare('SELECT * FROM invoice_items WHERE invoice_id = ?').all(invoice.id)
+    try {
+      const { generatePdf } = require('../pdf/generator')
+      const pdf = await generatePdf(invoice, items)
+      res.setHeader('Content-Type', 'application/pdf')
+      res.setHeader('Content-Disposition', `attachment; filename="${invoice.invoice_number}.pdf"`)
+      res.send(Buffer.from(pdf))
+    } catch (err) {
+      res.status(500).json({ error: 'PDF generation failed: ' + err.message })
+    }
+  })
+
   return router
 }
 
