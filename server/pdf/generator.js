@@ -110,7 +110,8 @@ function buildHtml(invoice, items) {
 async function generatePdf(invoice, items) {
   const html = buildHtml(invoice, items)
   const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
   })
   try {
     const page = await browser.newPage()
